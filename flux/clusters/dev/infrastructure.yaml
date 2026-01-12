@@ -11,6 +11,6 @@ spec:
     kind: GitRepository
     name: flux-sync
     namespace: flux-system
-  path: ./helm-repos
+  path: ./flux/helm-repos
   prune: true
   wait: true
