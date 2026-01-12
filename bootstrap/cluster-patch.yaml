@@ -1,0 +1,28 @@
+cluster:
+  inlineManifests:
+    - name: namespace
+      contents: |
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: flux-system
+        spec: {}
+        status: {}
+    - name: Secret
+      contents: |
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: git-ssh-auth
+          namespace: flux-system
+        type: Opaque
+        stringData:
+          identity: |
+            -----BEGIN OPENSSH PRIVATE KEY-----
+            ...
+            -----END OPENSSH PRIVATE KEY-----    
+          known_hosts: |
+            github.com ecdsa-sha2-nistp256 AAAA...  
+  extraManifests:
+    - https://github.com/controlplaneio-fluxcd/flux-operator/releases/latest/download/install.yaml
+    - https://raw.githubusercontent.com/CBX0N/homelab/refs/heads/main/bootstrap/flux.yaml
