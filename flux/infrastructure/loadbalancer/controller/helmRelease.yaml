@@ -16,20 +16,3 @@ spec:
         name: metallb
         namespace: default
       interval: 10m
-  postRenderers:
-    - kustomize:
-        patches:
-          - target:
-              version: v1
-              kind: Namespace
-              name: metallb-system
-            patch: |
-              - op: add
-                path: /metadata/labels/pod-security.kubernetes.io~1enforce
-                value: privileged
-              - op: add
-                path: /metadata/labels/pod-security.kubernetes.io~1audit
-                value: privileged
-              - op: add
-                path: /metadata/labels/pod-security.kubernetes.io~1warn
-                value: privileged
