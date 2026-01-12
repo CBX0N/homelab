@@ -17,7 +17,6 @@ spec:
     - notification-controller
   sync:
     kind: GitRepository
-    url: "ssh://git@github.com:CBX0N/homelab.git"
+    url: "https://gitlab.com/CBX0N/homelab.git"
     ref: "refs/heads/main"
     path: "flux"
-    pullSecret: "git-ssh-auth"
