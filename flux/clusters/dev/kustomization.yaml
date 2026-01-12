@@ -4,3 +4,4 @@ metadata:
   name: kustomizations
 resources:
   - infrastructure.yaml
+  - apps.yaml
