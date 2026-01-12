@@ -5,3 +5,4 @@ metadata:
 resources:
   - metallb.yaml
   - certmanager.yaml
+  - ingress-nginx.yaml
