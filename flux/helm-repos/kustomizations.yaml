@@ -3,4 +3,4 @@ kind: Kustomization
 metadata:
   name: kustomizations
 resources:
-  - bitnami.yaml
+  - metallb.yaml
