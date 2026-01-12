@@ -5,3 +5,4 @@ metadata:
   name: infra-controllers
 resources:
   - cert-manager.yaml
+  - ingress-nginx.yaml
