@@ -1,5 +1,23 @@
 cluster:
   inlineManifests:
+    - name: namespace-externaldns
+      contents: |
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: external-dns
+        spec: {}
+        status: {}
+    - name: secret-externaldns
+      contents: |
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: cloudflare-api-key
+          namespace: external-dns
+        type: Opaque
+        stringData:
+          apiKey:
     - name: namespace-flux
       contents: |
         apiVersion: v1
@@ -19,33 +37,9 @@ cluster:
         stringData:
           identity: |
             -----BEGIN OPENSSH PRIVATE KEY-----
-            ...
             -----END OPENSSH PRIVATE KEY-----    
           known_hosts: |
             github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
   extraManifests:
     - https://github.com/controlplaneio-fluxcd/flux-operator/releases/latest/download/install.yaml
     - https://raw.githubusercontent.com/CBX0N/homelab/refs/heads/main/bootstrap/flux.yaml
----
----
-cluster:
-  inlineManifests:
-    - name: namespace-externaldns
-      contents: |
-        apiVersion: v1
-        kind: Namespace
-        metadata:
-          name: external-dns
-        spec: {}
-        status: {}
-    - name: secret-externaldns
-      contents: |
-        apiVersion: v1
-        kind: Secret
-        metadata:
-          name: cloudflare-api-key
-          namespace: external-dns
-        type: Opaque
-        stringData:
-          apiKey:
-          email:

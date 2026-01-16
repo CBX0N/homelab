@@ -7,3 +7,4 @@ resources:
   - certmanager.yaml
   - ingress-nginx.yaml
   - external-dns.yaml
+  - external-secrets.yaml
