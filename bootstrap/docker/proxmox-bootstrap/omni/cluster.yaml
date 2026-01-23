@@ -1,0 +1,16 @@
+kind: Cluster
+name: talos-default
+kubernetes:
+  version: v1.34.2
+talos:
+  version: v1.11.5
+---
+kind: ControlPlane
+machineClass:
+  name: proxmox-auto
+  size: 3
+---
+kind: Workers
+machineClass:
+  name: proxmox-auto
+  size: 6

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: n8n
+  name: n8n
+  namespace: n8n
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: n8n
+  template:
+    metadata:
+      labels:
+        app: n8n
+    spec:
+      containers:
+      - image: docker.n8n.io/n8nio/n8n
+        name: n8n
+        env:
+          - name: WEBHOOK_URL
+            value: https://n8n.cbxon.co.uk/
+          - name: NGN_HOST
+            value: n8n.cbxon.co.uk
+          - name: NGN_PORT
+            value: "5678"
+        ports:
+        - containerPort: 5678

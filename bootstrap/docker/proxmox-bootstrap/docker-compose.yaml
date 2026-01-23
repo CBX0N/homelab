@@ -1,0 +1,15 @@
+services:
+  proxmox-bootstrap:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        OMNI_VERSION: "v1.4.7"
+        TALOS_VERSION: "v1.12.2"
+        TARGETARCH: "amd64"
+    container_name: proxmox-bootstrap
+    env_file:
+      - ./omni.local/.env
+    volumes:
+      - ~/.ssh/id_talos:/.ssh_key
+      - ./omni.local:/omni

@@ -1,0 +1,17 @@
+FROM alpine AS setup
+ARG omni_version="v1.4.7"
+ARG talos_version="v1.12.2"
+RUN apk add --no-cache wget \
+    && wget -O omnictl "https://github.com/siderolabs/omni/releases/download/${omni_version}/omnictl-linux-amd64" \
+    && wget -O talosctl "https://github.com/siderolabs/talos/releases/download/${talos_version}/talosctl-linux-amd64"
+COPY bootstrap.sh bootstrap
+COPY omni /omni
+RUN chmod +x omnictl talosctl bootstrap
+
+FROM alpine
+RUN apk add --no-cache bash uuidgen base64 openssh
+COPY --from=setup omnictl /usr/local/bin/omnictl
+COPY --from=setup talosctl /usr/local/bin/talosctl
+COPY --from=setup bootstrap /usr/local/bin/bootstrap
+COPY --from=setup /omni /omni
+ENTRYPOINT [ "bootstrap" ]
