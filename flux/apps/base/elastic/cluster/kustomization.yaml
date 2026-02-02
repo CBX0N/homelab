@@ -7,3 +7,4 @@ resources:
   - elasticsearch-pv.yaml
   - elasticsearch.yaml
   - kibana.yaml
+  - kibana-ingress.yaml
