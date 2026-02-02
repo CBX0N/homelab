@@ -6,5 +6,6 @@ resources:
   - namespace.yaml
   - elasticsearch-pv.yaml
   - elasticsearch.yaml
+  - elasticsearch-autoscaler.yaml
   - kibana.yaml
   - kibana-ingress.yaml
