@@ -3,4 +3,5 @@ kind: Kustomization
 metadata:
   name: kustomizations
 resources:
+  - namespace.yaml
   - elasticsearch.yaml
