@@ -4,4 +4,6 @@ metadata:
   name: kustomizations
 resources:
   - namespace.yaml
+  - elasticsearch-pv.yaml
   - elasticsearch.yaml
+  - kibana.yaml
