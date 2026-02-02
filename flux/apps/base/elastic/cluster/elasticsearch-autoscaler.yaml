@@ -1,7 +1,8 @@
 apiVersion: autoscaling.k8s.elastic.co/v1alpha1
 kind: ElasticsearchAutoscaler
 metadata:
-  name: autoscaling-sample
+  name: elasticsearch
+  namespace: elastic-cluster-a
 spec:
   elasticsearchRef:
     name: elasticsearch
