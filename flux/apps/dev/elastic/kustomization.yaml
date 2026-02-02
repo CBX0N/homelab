@@ -3,5 +3,5 @@ kind: Kustomization
 metadata:
   name: elasticsearch
 resources:
-  - ../../base/operator
-  - ../../base/cluster
+  - ../../base/elastic/operator
+  - ../../base/elastic/cluster

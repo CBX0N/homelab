@@ -6,4 +6,4 @@ resources:
   - podinfo
   - kube-prometheus-stack
   - n8n
-  - elastic-operator
+  - elastic
