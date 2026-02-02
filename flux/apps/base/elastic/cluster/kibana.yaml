@@ -8,3 +8,6 @@ spec:
   count: 1
   elasticsearchRef:
     name: elasticsearch
+  config:
+    server:
+      publicBaseUrl: https://kibana.cbxon.co.uk
