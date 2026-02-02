@@ -1,0 +1,18 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: elastic
+  namespace: default
+spec:
+  install:
+    createNamespace: true
+  targetNamespace: elastic-system
+  interval: 10m
+  chart:
+    spec:
+      chart: eck-operator
+      sourceRef:
+        kind: HelmRepository
+        name: elastic
+        namespace: default
+      interval: 10m
