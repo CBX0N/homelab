@@ -8,3 +8,4 @@ resources:
   - ingress-nginx.yaml
   - external-dns.yaml
   - external-secrets.yaml
+  - longhorn.yaml
