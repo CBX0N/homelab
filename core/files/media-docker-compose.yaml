@@ -1,0 +1,51 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: media_gluetun
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    env_file:
+      - wireguard.env
+    environment:
+      - VPN_SERVICE_PROVIDER=protonvpn
+      - VPN_TYPE=wireguard
+    ports:
+      - 9191:9191
+
+  dispatcharr:
+    image: ghcr.io/dispatcharr/dispatcharr:latest
+    container_name: dispatcharr
+    restart: unless-stopped
+    devices:
+      - /dev/dri:/dev/dri
+    environment:
+      - DISPATCHARR_ENV=aio
+      - REDIS_HOST=localhost
+      - CELERY_BROKER_URL=redis://localhost:6379/0
+      - DISPATCHARR_LOG_LEVEL=info
+    volumes:
+      - dispatcharr_data:/data
+    network_mode: "service:gluetun"
+
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    restart: unless-stopped
+    environment:
+      - JELLYFIN_PublishedServerUrl=http://jellyfin.cbxon.co.uk
+    volumes:
+      - jellyfin_config:/config
+      - jellyfin_cache:/cache
+      - /data/tv:/tv:ro
+      - /data/movies:/movies:ro
+    ports:
+      - 8096:8096/tcp
+      - 7359:7359/udp
+
+volumes:
+  dispatcharr_data:
+  jellyfin_config:
+  jellyfin_cache:

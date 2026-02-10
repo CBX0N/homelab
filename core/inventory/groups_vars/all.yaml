@@ -1,0 +1,6 @@
+ansible_user: cbxon
+ansible_become: true
+ansible_become_method: sudo
+ansible_become_flags: "-n"
+ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+ansible_ssh_private_key_file: ~/.ssh/id_ed25519

@@ -1,0 +1,16 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+  namespace: elastic-cluster-a
+spec:
+  version: 9.2.4
+  nodeSets:
+  - name: ingest
+    count: 1
+    config:
+      node.store.allow_mmap: false
+  - name: ml
+    count: 1
+    config:
+      node.store.allow_mmap: false

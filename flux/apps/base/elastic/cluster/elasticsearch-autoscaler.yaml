@@ -1,0 +1,40 @@
+apiVersion: autoscaling.k8s.elastic.co/v1alpha1
+kind: ElasticsearchAutoscaler
+metadata:
+  name: elasticsearch
+  namespace: elastic-cluster-a
+spec:
+  elasticsearchRef:
+    name: elasticsearch
+  policies:
+    - name: ingest
+      roles: ["data", "ingest" , "transform"]
+      resources:
+        nodeCount:
+          min: 1
+          max: 3
+        cpu:
+          min: 1
+          max: 4
+        memory:
+          min: 2Gi
+          max: 4Gi
+        storage:
+          min: 1Gi
+          max: 1Gi
+    - name: ml
+      roles:
+        - ml
+      resources:
+        nodeCount:
+          min: 1
+          max: 9
+        cpu:
+          min: 1
+          max: 4
+        memory:
+          min: 2Gi
+          max: 8Gi
+        storage:
+          min: 1Gi
+          max: 1Gi

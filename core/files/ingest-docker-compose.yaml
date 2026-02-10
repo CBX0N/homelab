@@ -1,0 +1,74 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    restart: unless-stopped
+    container_name: ingest_gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - VPN_SERVICE_PROVIDER=protonvpn
+      - VPN_TYPE=wireguard
+    env_file:
+      - wireguard.env
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+      - 3333:3333
+      - 3334:3334/tcp
+      - 3334:3334/udp
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    environment:
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    volumes:
+      - qbittorrent_config:/config
+      - qbittorrent_downloads:/downloads
+    network_mode: "service:gluetun"
+
+  bitmagnet:
+    image: ghcr.io/bitmagnet-io/bitmagnet:latest
+    container_name: bitmagnet
+    restart: unless-stopped
+    env_file:
+      - bitmagnet.env
+    volumes:
+      - bitmagnet_config:/root/.config/bitmagnet
+    command:
+      - worker
+      - run
+      - --keys=http_server
+      - --keys=queue_server
+      - --keys=dht_crawler
+    depends_on:
+      postgres:
+        condition: service_healthy
+    network_mode: "service:gluetun"
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: bitmagnet-postgres
+    restart: unless-stopped
+    env_file:
+      - postgres.env
+    volumes:
+      - /data/postgres-bitmagnet:/var/lib/postgresql/data
+    shm_size: 1g
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready
+      start_period: 20s
+      interval: 10s
+
+volumes:
+  bitmagnet_config:
+  qbittorrent_config:
+  qbittorrent_downloads:

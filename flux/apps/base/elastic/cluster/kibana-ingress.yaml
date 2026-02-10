@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: cert-cluster-issuer
+    meta.helm.sh/release-name: kibana
+    meta.helm.sh/release-namespace: elastic-cluster-a
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  name: kibana-ingress
+  namespace: elastic-cluster-a
+spec:
+  ingressClassName: nginx
+  rules: 
+  - host: kibana.cbxon.co.uk
+    http:
+      paths:
+      - backend:
+          service:
+            name: kibana-kb-http
+            port:
+              number: 5601
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - kibana.cbxon.co.uk
+    secretName: certificate-kibana
