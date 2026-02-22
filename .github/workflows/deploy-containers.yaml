@@ -13,5 +13,8 @@ jobs:
       - name: Run a multi-line script
         env:
           VAULT: ${{ secrets.ANSIBLE_VAULT }}
+          VAULT_PASS: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
         run: |
-          echo "$VAULT" | base64 -d > vault.yaml
+          echo "$VAULT" | base64 -d > ./core/vars/vault.yaml
+          ansible-galaxy collection install -r core/requirements.yaml
+          echo "$VAULT_PASS" | ansible-playbook -i inventory/inventory.yaml core-playbook.yaml -J
