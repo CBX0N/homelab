@@ -14,4 +14,4 @@ jobs:
         env:
           VAULT: ${{ secrets.ANSIBLE_VAULT }}
         run: |
-          echo $VAULT | base64 -d > vault.yaml
+          echo "$VAULT" | base64 -d > vault.yaml
