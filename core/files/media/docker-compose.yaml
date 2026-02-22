@@ -8,8 +8,6 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     env_file: wireguard.env
-    ports:
-      - 9191:9191
     networks:
       - caddy_net
 
@@ -51,10 +49,40 @@ services:
     networks:
       - caddy_net
 
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - sonarr_config:/config
+      - /data/tv:/tv
+      # - /path/to/downloadclient-downloads:/downloads #optional
+    networks:
+      - caddy_net
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - radarr_config:/config
+      - /data/movies:/movies #optional
+      # - /path/to/download-client-downloads:/downloads #optional
+    networks:
+      - caddy_net
+
 volumes:
   dispatcharr_data:
   jellyfin_config:
   jellyfin_cache:
+  sonarr_config:
+  radarr_config:
 
 networks:
   caddy_net:

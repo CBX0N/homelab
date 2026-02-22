@@ -25,3 +25,11 @@ http://homarr.cbxon.co.uk {
 http://guac.cbxon.co.uk {
     reverse_proxy guacamole:8080
 }
+
+http://radarr.cbxon.co.uk {
+    reverse_proxy radarr:8989
+}
+
+http://sonarr.cbxon.co.uk {
+    reverse_proxy sonarr:7878
+}
