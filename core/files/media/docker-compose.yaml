@@ -44,6 +44,7 @@ services:
       - jellyfin_cache:/cache
       - /data/tv:/tv:ro
       - /data/movies:/movies:ro
+      - /data/backups/jellyfin:/config/data/backups
     ports:
       - 8096:8096
     networks:
@@ -59,6 +60,7 @@ services:
     volumes:
       - sonarr_config:/config
       - /data/tv:/tv
+      - /data/backups/sonarr:/config/Backups
       # - /path/to/downloadclient-downloads:/downloads #optional
     networks:
       - caddy_net
@@ -72,7 +74,8 @@ services:
       - TZ=Etc/UTC
     volumes:
       - radarr_config:/config
-      - /data/movies:/movies #optional
+      - /data/movies:/movies
+      - /data/backups/radarr:/config/Backups
       # - /path/to/download-client-downloads:/downloads #optional
     networks:
       - caddy_net
