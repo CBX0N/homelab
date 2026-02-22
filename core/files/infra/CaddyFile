@@ -14,6 +14,10 @@ http://qbittorrent.cbxon.co.uk {
     reverse_proxy gluetun:8080
 }
 
+http://prowlarr.cbxon.co.uk {
+    reverse_proxy gluetun:9696
+}
+
 http://dispatcharr.cbxon.co.uk {
     reverse_proxy media_gluetun:9191
 }

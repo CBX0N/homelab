@@ -22,6 +22,17 @@ services:
       - qbittorrent_downloads:/downloads
     network_mode: "service:gluetun"
 
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - prowlarr_config:/config
+    network_mode: "service:gluetun"
+
   bitmagnet:
     image: ghcr.io/bitmagnet-io/bitmagnet:latest
     restart: unless-stopped
@@ -56,6 +67,7 @@ services:
 
 volumes:
   bitmagnet_config:
+  prowlarr_config:
   qbittorrent_config:
   qbittorrent_downloads:
 
