@@ -18,7 +18,7 @@ jobs:
         working-directory: core
         run: |
           echo "$VAULT" | base64 -d > vars/vault.yaml
-          echo "$SSH_KEY" | base64 -d > inventory/groups_vars/id_ed25519
-          chmod 500 inventory/groups_vars/id_ed25519
+          echo "$SSH_KEY" | base64 -d > inventory/group_vars/id_ed25519
+          chmod 500 inventory/group_vars/id_ed25519
           ansible-galaxy collection install -r requirements.yaml
           echo "$VAULT_PASS" | ansible-playbook -i inventory/inventory.yaml core-playbook.yaml -J
