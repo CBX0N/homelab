@@ -25,4 +25,4 @@ jobs:
       - name: Cleanup repository
         if: always()
         run: |
-          rm -rf "$GITHUB_WORKSPACE/*"
+          rm -rf "$GITHUB_WORKSPACE"/*
