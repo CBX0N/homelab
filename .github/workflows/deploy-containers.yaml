@@ -22,3 +22,7 @@ jobs:
           chmod 500 id_ed25519
           ansible-galaxy collection install -r requirements.yaml
           echo "$VAULT_PASS" | ansible-playbook -i inventory/inventory.yaml core-playbook.yaml -J
+      - name: Cleanup repository
+        if: always()
+        run: |
+          rm -rf "$GITHUB_WORKSPACE"
