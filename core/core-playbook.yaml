@@ -1,6 +1,8 @@
 ---
 - name: Deploy Docker Stacks
   hosts: core
+  vars:
+    - show_logs: false
   vars_files:
     - vars/docker_stacks.yaml
     - vars/vault.yaml
@@ -66,7 +68,7 @@
         state: directory
         mode: "0755"
       loop: "{{ docker_stacks }}"
-      no_log: true
+      no_log: "{{ show_logs != true }}"
 
     - name: Copy stack source files
       ansible.builtin.copy:
@@ -74,7 +76,7 @@
         dest: "{{ item.dest }}/"
         mode: "0644"
       loop: "{{ docker_stacks }}"
-      no_log: true
+      no_log: "{{ show_logs != true }}"
 
     - name: Create stack env files
       ansible.builtin.template:
@@ -84,12 +86,26 @@
       loop: "{{ docker_stacks | subelements('env_files', skip_missing=True) }}"
       vars:
         env_vars: "{{ item.1.vars }}"
-      no_log: true
+      no_log: "{{ show_logs != true }}"
 
-    - name: Start stacks
+    - name: Create Stacks
+      become: true
       community.docker.docker_compose_v2:
         project_src: "{{ item.dest }}"
         files:
-          - docker-compose.yml
+          - docker-compose.yaml
+        state: present
+      loop: "{{ docker_stacks }}"
+      when: item.name != "actions"
+      no_log: "{{ show_logs != true }}"
+
+    - name: Restart Stacks
+      become: true
+      community.docker.docker_compose_v2:
+        project_src: "{{ item.dest }}"
+        files:
+          - docker-compose.yaml
         state: restarted
       loop: "{{ docker_stacks }}"
+      when: item.name != "actions"
+      no_log: "{{ show_logs != true }}"

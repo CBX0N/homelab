@@ -2,9 +2,10 @@ FROM debian:bookworm-slim
 
 ARG RUNNER_VERSION=2.331.0
 ENV DEBIAN_FRONTEND=noninteractive
+ENV UBUNTU_CODENAME=jammy
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl jq build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip \
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    curl jq build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip wget gpg \
     bash \
     && rm -rf /var/lib/apt/lists/*
 
@@ -18,7 +19,11 @@ RUN mkdir -p /home/docker/actions-runner \
 
 RUN /home/docker/actions-runner/bin/installdependencies.sh
 
-COPY ./start.sh /home/docker/start.sh
+RUN wget -O- "https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=get&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367" | gpg --dearmor -o /usr/share/keyrings/ansible-archive-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/ansible-archive-keyring.gpg] http://ppa.launchpad.net/ansible/ansible/ubuntu $UBUNTU_CODENAME main" | tee /etc/apt/sources.list.d/ansible.list \
+    && apt update -y && apt install ansible -y
+
+COPY ./actions_runner_start.sh /home/docker/start.sh
 RUN chmod +x /home/docker/start.sh \
     && chown -R docker:docker /home/docker
 
