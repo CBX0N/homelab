@@ -27,9 +27,9 @@ http://guac.cbxon.co.uk {
 }
 
 http://radarr.cbxon.co.uk {
-    reverse_proxy radarr:8989
+    reverse_proxy media-radarr-1:7878
 }
 
 http://sonarr.cbxon.co.uk {
-    reverse_proxy sonarr:7878
+    reverse_proxy media-sonarr-1:8989
 }
