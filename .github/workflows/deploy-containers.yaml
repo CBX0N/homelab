@@ -14,7 +14,10 @@ jobs:
         env:
           VAULT: ${{ secrets.ANSIBLE_VAULT }}
           VAULT_PASS: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
           echo "$VAULT" | base64 -d > ./core/vars/vault.yaml
+          echo "$SSH_KEY" | base64 -d > ./core/inventory/group_vars/id_ed25519
+          chmod 500 ./core/inventory/group_vars/id_ed25519
           ansible-galaxy collection install -r ./core/requirements.yaml
           echo "$VAULT_PASS" | ansible-playbook -i ./core/inventory/inventory.yaml ./core/core-playbook.yaml -J
