@@ -16,5 +16,5 @@ jobs:
           VAULT_PASS: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
         run: |
           echo "$VAULT" | base64 -d > ./core/vars/vault.yaml
-          ansible-galaxy collection install -r core/requirements.yaml
-          echo "$VAULT_PASS" | ansible-playbook -i inventory/inventory.yaml core-playbook.yaml -J
+          ansible-galaxy collection install -r ./core/requirements.yaml
+          echo "$VAULT_PASS" | ansible-playbook -i ./core/inventory/inventory.yaml ./core/core-playbook.yaml -J
