@@ -37,3 +37,7 @@ http://radarr.cbxon.co.uk {
 http://sonarr.cbxon.co.uk {
     reverse_proxy media-sonarr-1:8989
 }
+
+http://seerr.cbxon.co.uk {
+    reverse_proxy media-seerr-1:5055
+}

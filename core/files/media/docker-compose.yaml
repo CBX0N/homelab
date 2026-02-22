@@ -50,6 +50,18 @@ services:
     networks:
       - caddy_net
 
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=debug
+      # - TZ=Asia/Tashkent
+      - PORT=5055
+    volumes:
+      - seerr_config:/app/config
+    networks:
+      - caddy_net
+
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     restart: unless-stopped
@@ -86,6 +98,7 @@ volumes:
   jellyfin_cache:
   sonarr_config:
   radarr_config:
+  seerr_config:
 
 networks:
   caddy_net:
