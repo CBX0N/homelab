@@ -1,0 +1,27 @@
+{
+	auto_https disable_redirects
+}
+
+http://jellyfin.cbxon.co.uk {
+    reverse_proxy jellyfin:8096
+}
+
+http://bitmagnet.cbxon.co.uk {
+    reverse_proxy gluetun:3333
+}
+
+http://qbittorrent.cbxon.co.uk {
+    reverse_proxy gluetun:8080
+}
+
+http://dispatcharr.cbxon.co.uk {
+    reverse_proxy media_gluetun:9191
+}
+
+http://homarr.cbxon.co.uk {
+    reverse_proxy homarr:7575
+}
+
+http://guac.cbxon.co.uk {
+    reverse_proxy guacamole:8080
+}

@@ -1,0 +1,54 @@
+services:
+  caddy:
+    image: docker.io/library/caddy:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./CaddyFile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - caddy_net
+
+  guacamole:
+    image: docker.io/guacamole/guacamole:latest
+    restart: unless-stopped
+    env_file: guacamole-auth.env
+    volumes:
+      - initdb:/opt/guacamole/extensions/guacamole-auth-jdbc/postgresql/schema:ro
+    networks:
+      - caddy_net
+      - guacamole_net
+    depends_on:
+      - guacd
+      - postgres
+  
+  guacd:
+    image: docker.io/guacamole/guacd:latest
+    restart: unless-stopped
+    networks:
+      - guacamole_net
+
+  postgres:
+    image: docker.io/library/postgres:16-alpine
+    restart: unless-stopped
+    env_file: postgres-auth.env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - initdb:/docker-entrypoint-initdb.d:ro
+    networks:
+      - guacamole_net
+
+volumes:
+  initdb:
+  caddy_data:
+  caddy_config:
+  homarr_appdata:
+  postgres:
+
+networks:
+  guacamole_net:
+  caddy_net:
+    driver: bridge

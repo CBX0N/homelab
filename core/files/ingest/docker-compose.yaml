@@ -1,28 +1,17 @@
 services:
   gluetun:
-    image: qmcgaw/gluetun
+    image: docker.io/qmcgaw/gluetun
     restart: unless-stopped
-    container_name: ingest_gluetun
     cap_add:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
-    environment:
-      - VPN_SERVICE_PROVIDER=protonvpn
-      - VPN_TYPE=wireguard
-    env_file:
-      - wireguard.env
-    ports:
-      - 8080:8080
-      - 6881:6881
-      - 6881:6881/udp
-      - 3333:3333
-      - 3334:3334/tcp
-      - 3334:3334/udp
+    env_file: wireguard.env
+    networks:
+      - caddy_net
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbittorrent
     restart: unless-stopped
     environment:
       - TZ=Etc/UTC
@@ -35,10 +24,8 @@ services:
 
   bitmagnet:
     image: ghcr.io/bitmagnet-io/bitmagnet:latest
-    container_name: bitmagnet
     restart: unless-stopped
-    env_file:
-      - bitmagnet.env
+    env_file: bitmagnet.env
     volumes:
       - bitmagnet_config:/root/.config/bitmagnet
     command:
@@ -53,11 +40,9 @@ services:
     network_mode: "service:gluetun"
 
   postgres:
-    image: postgres:16-alpine
-    container_name: bitmagnet-postgres
+    image: docker.io/library/postgres:16-alpine
     restart: unless-stopped
-    env_file:
-      - postgres.env
+    env_file: postgres.env
     volumes:
       - /data/postgres-bitmagnet:/var/lib/postgresql/data
     shm_size: 1g
@@ -67,8 +52,14 @@ services:
         - pg_isready
       start_period: 20s
       interval: 10s
+    network_mode: "service:gluetun"
 
 volumes:
   bitmagnet_config:
   qbittorrent_config:
   qbittorrent_downloads:
+
+networks:
+  caddy_net:
+    name: infra_caddy_net
+    external: true

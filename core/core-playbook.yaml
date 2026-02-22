@@ -1,6 +1,9 @@
 ---
-- name: Configure dependencies
+- name: Deploy Docker Stacks
   hosts: core
+  vars_files:
+    - vars/docker_stacks.yaml
+    - vars/vault.yaml
   tasks:
     - name: Install required packages
       become: true
@@ -49,7 +52,7 @@
         state: present
         update_cache: true
 
-    - name: Create directories
+    - name: Create root docker directory
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -57,90 +60,36 @@
       loop:
         - /opt/docker
 
-- name: Deploy Ingest stack
-  hosts: core
-  become: true
-  tasks:
-    - name: Create directories
+    - name: Create docker stack directories
       ansible.builtin.file:
-        path: "{{ item }}"
+        path: "{{ item.dest }}"
         state: directory
-        mode: '0755'
-      loop:
-        - /opt/docker/ingest
+        mode: "0755"
+      loop: "{{ docker_stacks }}"
+      no_log: true
 
-    - name: Copy Docker Files to target
+    - name: Copy stack source files
       ansible.builtin.copy:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
+        src: "{{ item.source }}"
+        dest: "{{ item.dest }}/"
         mode: "0644"
-      loop:
-        - src: files/ingest-docker-compose.yaml
-          dest: /opt/docker/ingest/docker-compose.yml
-        - src: files/wireguard.env
-          dest: /opt/docker/ingest/wireguard.env
-          
-    - name: Deploy Download stack
+      loop: "{{ docker_stacks }}"
+      no_log: true
+
+    - name: Create stack env files
+      ansible.builtin.template:
+        src: docker.env.j2
+        dest: "{{ item.0.dest }}/{{ item.1.filename }}"
+        mode: "0600"
+      loop: "{{ docker_stacks | subelements('env_files', skip_missing=True) }}"
+      vars:
+        env_vars: "{{ item.1.vars }}"
+      no_log: true
+
+    - name: Start stacks
       community.docker.docker_compose_v2:
-        project_src: /opt/docker/ingest
+        project_src: "{{ item.dest }}"
         files:
           - docker-compose.yml
-        state: present
-
-- name: Deploy Media stack
-  hosts: core
-  become: true
-  tasks:
-    - name: Create directories
-      ansible.builtin.file:
-        path: "{{ item }}"
-        state: directory
-        mode: '0755'
-      loop:
-        - /opt/docker/media
-
-    - name: Copy Docker Files to target
-      ansible.builtin.copy:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
-        mode: "0644"
-      loop:
-        - src: files/media-docker-compose.yaml
-          dest: /opt/docker/media/docker-compose.yml
-        - src: files/wireguard.env
-          dest: /opt/docker/media/wireguard.env
-          
-    - name: Deploy Download stack
-      community.docker.docker_compose_v2:
-        project_src: /opt/docker/media
-        files:
-          - docker-compose.yml
-        state: present
-
-- name: Deploy Infra stack
-  hosts: core
-  become: true
-  tasks:
-    - name: Create directories
-      ansible.builtin.file:
-        path: "{{ item }}"
-        state: directory
-        mode: '0755'
-      loop:
-        - /opt/docker/infra
-
-    - name: Copy Docker Files to target
-      ansible.builtin.copy:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
-        mode: "0644"
-      loop:
-        - src: files/infra-docker-compose.yaml
-          dest: /opt/docker/ingest/docker-compose.yml
-          
-    - name: Deploy Download stack
-      community.docker.docker_compose_v2:
-        project_src: /opt/docker/infra
-        files:
-          - docker-compose.yml
-        state: present
+        state: restarted
+      loop: "{{ docker_stacks }}"

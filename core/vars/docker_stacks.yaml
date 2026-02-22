@@ -1,0 +1,65 @@
+docker_stacks:
+  - name: actions
+    dest: /opt/docker/actions
+    source: files/actions/
+    env_files:
+      - name: actions
+        filename: actions_runner.env
+        vars:
+          RUNNER_TOKEN: "{{ vault_actions_runner_token }}"
+          REPO_URL: https://github.com/CBX0N/homelab
+
+  - name: infra
+    dest: /opt/docker/infra
+    source: files/infra/
+    env_files:
+      - name: postgres
+        filename: postgres-auth.env
+        vars:
+          POSTGRES_DB: guacamole_db
+          POSTGRES_PASSWORD: "{{ vault_postgresql_password }}"
+          POSTGRES_USER: "{{ vault_postgresql_user }}"
+      - name: guacamole
+        filename: guacamole-auth.env
+        vars:
+          WEBAPP_CONTEXT: ROOT
+          REMOTE_IP_VALVE_ENABLED: "true"
+          GUACD_HOSTNAME: guacd
+          POSTGRESQL_ENABLED: "true"
+          POSTGRESQL_DATABASE: guacamole_db
+          POSTGRESQL_HOSTNAME: postgres
+          POSTGRESQL_PASSWORD: "{{ vault_postgresql_password }}"
+          POSTGRESQL_USER: "{{ vault_postgresql_user }}"
+
+  - name: ingest
+    dest: /opt/docker/ingest
+    source: files/ingest/
+    env_files:
+      - name: wireguard
+        filename: wireguard.env
+        vars:
+          VPN_SERVICE_PROVIDER: protonvpn
+          VPN_TYPE: wireguard
+          WIREGUARD_PRIVATE_KEY: "{{ vault_wireguard_private_key }}"
+      - name: bitmagnet
+        filename: bitmagnet.env
+        vars:
+          POSTGRES_DB: bitmagnet
+          POSTGRES_PASSWORD: "{{ vault_bitmagnet_postgresql_password }}"
+          TMDB_API_KEY: "{{ vault_tmbd_api_key }}"
+      - name: postgres
+        filename: postgres.env
+        vars:
+          POSTGRES_PASSWORD: "{{ vault_bitmagnet_postgresql_password }}"
+          PGUSER: postgres
+
+  - name: media
+    dest: /opt/docker/media
+    source: files/media/
+    env_files:
+      - name: wireguard
+        filename: wireguard.env
+        vars:
+          VPN_SERVICE_PROVIDER: protonvpn
+          VPN_TYPE: wireguard
+          WIREGUARD_PRIVATE_KEY: "{{ vault_wireguard_private_key }}"

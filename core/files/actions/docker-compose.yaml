@@ -1,0 +1,9 @@
+services:
+  actions-runner:
+    build:
+      context: .
+      dockerfile: dockerfile
+      args:
+        RUNNER_VERSION: "2.331.0"
+    env_file: actions_runner.env
+    restart: unless-stopped

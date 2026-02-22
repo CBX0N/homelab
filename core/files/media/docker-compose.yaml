@@ -7,13 +7,11 @@ services:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
-    env_file:
-      - wireguard.env
-    environment:
-      - VPN_SERVICE_PROVIDER=protonvpn
-      - VPN_TYPE=wireguard
+    env_file: wireguard.env
     ports:
       - 9191:9191
+    networks:
+      - caddy_net
 
   dispatcharr:
     image: ghcr.io/dispatcharr/dispatcharr:latest
@@ -21,6 +19,8 @@ services:
     restart: unless-stopped
     devices:
       - /dev/dri:/dev/dri
+    group_add:
+      - 992   
     environment:
       - DISPATCHARR_ENV=aio
       - REDIS_HOST=localhost
@@ -28,12 +28,17 @@ services:
       - DISPATCHARR_LOG_LEVEL=info
     volumes:
       - dispatcharr_data:/data
+      - /data/backups/dispatcharr:/data/backups
     network_mode: "service:gluetun"
 
   jellyfin:
-    image: jellyfin/jellyfin
+    image: docker.io/jellyfin/jellyfin
     container_name: jellyfin
     restart: unless-stopped
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - 992   
     environment:
       - JELLYFIN_PublishedServerUrl=http://jellyfin.cbxon.co.uk
     volumes:
@@ -42,10 +47,16 @@ services:
       - /data/tv:/tv:ro
       - /data/movies:/movies:ro
     ports:
-      - 8096:8096/tcp
-      - 7359:7359/udp
+      - 8096:8096
+    networks:
+      - caddy_net
 
 volumes:
   dispatcharr_data:
   jellyfin_config:
   jellyfin_cache:
+
+networks:
+  caddy_net:
+    name: infra_caddy_net
+    external: true
