@@ -41,6 +41,7 @@ docker_stacks:
           VPN_SERVICE_PROVIDER: protonvpn
           VPN_TYPE: wireguard
           WIREGUARD_PRIVATE_KEY: "{{ vault_wireguard_private_key }}"
+          PORT_FORWARD_ONLY: "on"
       - name: bitmagnet
         filename: bitmagnet.env
         vars:
@@ -63,3 +64,4 @@ docker_stacks:
           VPN_SERVICE_PROVIDER: protonvpn
           VPN_TYPE: wireguard
           WIREGUARD_PRIVATE_KEY: "{{ vault_wireguard_private_key }}"
+          STREAM_ONLY: "on"
