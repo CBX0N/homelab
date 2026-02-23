@@ -1,4 +1,4 @@
-name: Deploy Containers
+name: Deploy Stacks
 on:
   push:
     branches: [ "main" ]
@@ -6,11 +6,11 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 jobs:
-  build:
+  Deploy:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-      - name: Run a multi-line script
+      - name: Run Ansible Playbook - core-playbook.yaml
         env:
           VAULT: ${{ secrets.ANSIBLE_VAULT }}
           VAULT_PASS: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
