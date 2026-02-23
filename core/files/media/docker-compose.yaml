@@ -73,7 +73,7 @@ services:
       - sonarr_config:/config
       - /data/tv:/tv
       - /data/backups/sonarr:/config/Backups
-      # - /path/to/downloadclient-downloads:/downloads #optional
+      - downloads:/downloads
     networks:
       - caddy_net
 
@@ -88,7 +88,7 @@ services:
       - radarr_config:/config
       - /data/movies:/movies
       - /data/backups/radarr:/config/Backups
-      # - /path/to/download-client-downloads:/downloads #optional
+      - downloads:/downloads
     networks:
       - caddy_net
 
@@ -99,6 +99,9 @@ volumes:
   sonarr_config:
   radarr_config:
   seerr_config:
+  downloads:
+    external: true
+    name: ingest_qbittorrent_downloads
 
 networks:
   caddy_net:
