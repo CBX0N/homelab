@@ -41,3 +41,7 @@ http://sonarr.cbxon.co.uk {
 http://seerr.cbxon.co.uk {
     reverse_proxy media-seerr-1:5055
 }
+
+http://arcane.cbxon.co.uk {
+    reverse_proxy arcane:3552
+}

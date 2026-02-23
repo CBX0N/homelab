@@ -30,6 +30,18 @@ docker_stacks:
           POSTGRESQL_HOSTNAME: postgres
           POSTGRESQL_PASSWORD: "{{ vault_postgresql_password }}"
           POSTGRESQL_USER: "{{ vault_postgresql_user }}"
+      - name: arcane
+        filename: arcane.env
+        vars:
+          APP_URL: http://arcane.cbxon.co.uk
+          PUID: "1000"
+          PGID: "1000"
+          LOG_LEVEL: info
+          LOG_JSON: "false"
+          OIDC_ENABLED: "false"
+          DATABASE_URL: file:data/arcane.db?_pragma=journal_mode(WAL)&_pragma=busy_timeout(2500)&_txlock=immediate
+          ENCRYPTION_KEY: "{{ vault_arcane_encryption_key }}"
+          JWT_SECRET: "{{ vault_arcane_jwt_secret }}"
 
   - name: ingest
     dest: /opt/docker/ingest

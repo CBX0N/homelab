@@ -41,7 +41,18 @@ services:
     networks:
       - guacamole_net
 
+  arcane:
+    image: ghcr.io/getarcaneapp/arcane:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - arcane-data:/app/data
+    env_file: arcane.env
+    networks:
+      - caddy_net
+
 volumes:
+  arcane-data:
   initdb:
   caddy_data:
   caddy_config:
